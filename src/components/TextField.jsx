@@ -1,9 +1,9 @@
 import React from 'react';
 
-const TextField = () => {
+const TextField = (props) => {
   return (
     <div>
-      <p>{this.props.renderedText}</p>
+      <p>{props.renderedText}</p>
     </div>
   );
 };
