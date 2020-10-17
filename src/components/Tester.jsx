@@ -1,6 +1,5 @@
 import React from 'react';
 import Intro from './Intro';
-import Clock from './Clock';
 import TextField from './TextField';
 import TextInput from './TextInput';
 import Status from './Status';
@@ -11,8 +10,8 @@ class Tester extends React.Component {
     testStarted: false,
     testFinished: false,
     renderedText: '',
-    words: [],
-    completedWords: [],
+    individualWords: [],
+    correctWords: [],
     inputValue: '',
     wpm: 0,
     startTime: undefined,
@@ -31,11 +30,11 @@ class Tester extends React.Component {
     ];
     const renderedText =
       textOptions[Math.floor(Math.random() * textOptions.length)];
-    const words = renderedText.split(' ');
+    const individualWords = renderedText.split(' ');
     this.setState({
       renderedText,
-      words,
-      completedWords: [],
+      individualWords,
+      correctWords: [],
     });
   };
 
@@ -48,44 +47,40 @@ class Tester extends React.Component {
     });
   };
 
+  calculateWPM = () => {
+    const { startTime, correctWords } = this.state;
+    const timeAtInputChange = Date.now();
+    const timeElapsed = (timeAtInputChange - startTime) / 60000;
+    const wpm = Math.ceil(correctWords.join('').length / 5 / timeElapsed);
+    this.setState({
+      wpm,
+      timeElapsed,
+    });
+  };
+
   handleChange = (e) => {
-    const { words, completedWords } = this.state;
+    this.calculateWPM();
+    const { individualWords, correctWords } = this.state;
     const inputValue = e.target.value;
-    const lastLetter = inputValue[inputValue.length - 1];
-    const currentWord = words[0];
-    if (lastLetter === ' ' || lastLetter === '.') {
-      if (inputValue.trim() === currentWord) {
-        const newWords = [...words.slice(1)];
-        const newCompletedWords = [...completedWords, currentWord];
+    const lastCharacter = inputValue[inputValue.length - 1];
+    const currentWord = individualWords[0];
+    if (lastCharacter === ' ' || lastCharacter === '.') {
+      if (currentWord === inputValue.trim()) {
+        const newWords = [...individualWords.slice(1)];
+        const newCorrectWords = [...correctWords, currentWord];
         this.setState({
-          words: newWords,
-          completedWords: newCompletedWords,
+          individualWords: newWords,
+          correctWords: newCorrectWords,
           inputValue: '',
-          completed: newWords.length === 0,
+          testFinished: newWords.length === 0,
         });
       }
     } else {
       this.setState({
         inputValue,
-        lastLetter,
+        lastCharacter,
       });
     }
-
-    this.calculateWPM();
-  };
-
-  calculateWPM = () => {
-    const { startTime, completedWords } = this.state;
-    const timeAtInputChange = Date.now();
-    const timeElapsed = (timeAtInputChange - startTime) / 60000;
-    const wordsTyped = Math.ceil(
-      completedWords.reduce((acc, word) => (acc += word.length), 0) / 5
-    );
-    const wpm = Math.ceil(wordsTyped / timeElapsed);
-    this.setState({
-      wpm,
-      timeElapsed,
-    });
   };
 
   render() {
@@ -102,12 +97,11 @@ class Tester extends React.Component {
       return <Intro startTest={this.startTest} />;
     }
     if (testFinished) {
-      return <Results />;
+      return <Results wpm={wpm} startTest={this.startTest} />;
     }
     return (
       <div>
-        <Clock timeElapsed={timeElapsed} />
-        <Status wpm={wpm} />
+        <Status wpm={wpm} timeElapsed={timeElapsed} />
         <TextField
           renderedText={renderedText}
           completedWords={completedWords}
