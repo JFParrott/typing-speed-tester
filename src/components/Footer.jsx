@@ -2,8 +2,8 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer>
-      <p>Footer - Built using React</p>
+    <footer className="footer-container">
+      <p>Built using React</p>
     </footer>
   );
 };

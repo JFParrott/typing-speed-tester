@@ -3,9 +3,9 @@ import React from 'react';
 const Status = (props) => {
   return (
     <p>
-      {props.wpm}
+      {props.wpm} WPM
       <br />
-      {Math.ceil(props.timeElapsed * 60)}
+      {Math.ceil(props.timeElapsed * 60)} seconds
     </p>
   );
 };

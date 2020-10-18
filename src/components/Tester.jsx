@@ -44,6 +44,8 @@ class Tester extends React.Component {
       testStarted: true,
       startTime: Date.now(),
       testFinished: false,
+      wpm: 0,
+      timeElapsed: 0,
     });
   };
 
@@ -87,7 +89,7 @@ class Tester extends React.Component {
     const {
       renderedText,
       inputValue,
-      completedWords,
+      correctWords,
       wpm,
       timeElapsed,
       testStarted,
@@ -100,11 +102,11 @@ class Tester extends React.Component {
       return <Results wpm={wpm} startTest={this.startTest} />;
     }
     return (
-      <div>
+      <div className="tester-container">
         <Status wpm={wpm} timeElapsed={timeElapsed} />
         <TextField
           renderedText={renderedText}
-          completedWords={completedWords}
+          correctWords={correctWords}
           inputValue={inputValue}
         />
         <TextInput handleChange={this.handleChange} inputValue={inputValue} />

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Intro = (props) => {
   return (
-    <div>
+    <div className="intro-container">
       <p>
         Welcome to my typing speed tester. Click the button below to start the
         test. The timer will begin as soon as the button is clicked. Good luck!

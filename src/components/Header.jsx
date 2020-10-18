@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header = () => {
   return (
-    <div>
+    <div className="header-container">
       <h1>Typing Speed Tester!</h1>
     </div>
   );
